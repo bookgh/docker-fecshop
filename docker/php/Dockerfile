@@ -57,6 +57,4 @@ RUN set -ex; \
 
 WORKDIR /app
 
-USER www-data
-
 CMD ["php-fpm"]
