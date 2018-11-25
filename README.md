@@ -99,3 +99,7 @@ fecshop 依赖于多个基础的服务。
 
 数据目录: `/usr/local/xunsearch/data`
 
+
+## repository
+
+https://github.com/ChallengesOfPHP/docker-fecshop
