@@ -23,6 +23,9 @@ RUN set -ex; \
         libzip-dev \
         # php memcached deps
         libmemcached-dev \
+        # The SCRAM_SHA_1 authentication mechanism requires libmongoc built with ENABLE_SSL
+        libcurl4-openssl-dev \
+        libssl-dev \
         ; \
     docker-php-ext-configure bcmath; \
     docker-php-ext-configure gd \
