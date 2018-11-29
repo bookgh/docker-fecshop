@@ -65,6 +65,8 @@ fecshop 依赖于多个基础的服务。
 
 通过环境变量设置 root 密码：`MYSQL_ROOT_PASSWORD: root`
 
+通过环境变量设置数据库: `MYSQL_DATABASE: fecshop`
+
 配置目录: `/etc/mysql/conf.d`
 
 数据目录: `/var/lib/mysql`
@@ -76,6 +78,8 @@ fecshop 依赖于多个基础的服务。
 通过环境变量设置用户名: `MONGO_INITDB_ROOT_USER: root`
 
 通过环境变量设置密码: `MONGO_INITDB_ROOT_PASSWORD: root`
+
+通过环境变量设置初始数据库: `MONGODB_INITDB_DATABASE: fecshop`
 
 通过指定的文件设置密码: `MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo-root` 需要把密码文件通过数据卷挂载到 `/run/secrets/mongo-root`
 
