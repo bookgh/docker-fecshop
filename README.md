@@ -45,7 +45,7 @@ fecshop 依赖于多个基础的服务。
 
 #### nginx
 
-基础镜像: nginx:1.15-alpine
+基础镜像: nginx:1.15
 
 #### php
 
@@ -106,4 +106,4 @@ fecshop 依赖于多个基础的服务。
 
 ## repository
 
-https://github.com/ChallengesOfPHP/docker-fecshop
+https://github.com/docker-labs/docker-fecshop
