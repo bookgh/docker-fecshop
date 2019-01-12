@@ -20,15 +20,31 @@ services:
   mysql:
     image: mysql:5.7
     restart: always
+    volumes:
+      - mysql:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fecshop
   mongodb:
     image: mongo:3.6
     restart: always
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_logs:/data/logs
     environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
       MONGO_INITDB_DATABASE: fecshop
   redis:
     image: redis:4.0-stretch
     restart: always
+    volumes:
+      - redis:/data
   xunsearch:
     image: hightman/xunsearch:latest
+
+volumes:
+  mysql:
+  mongodb_data:
+  mongodb_logs:
+  redis:
