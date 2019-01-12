@@ -32,8 +32,6 @@ services:
       - mongodb_data:/data/db
       - mongodb_logs:/data/logs
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
       MONGO_INITDB_DATABASE: fecshop
   redis:
     image: redis:4.0-stretch
