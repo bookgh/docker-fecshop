@@ -15,17 +15,17 @@ RUN set -ex; \
     apt-get install -y \
         # dev tools
         git \
+	cmake \
         # php gd deps
         libfreetype6-dev \
         libpng-dev \
         libjpeg-dev \
         # php zip deps
         libzip-dev \
-        # php memcached deps
-        libmemcached-dev \
-        # The SCRAM_SHA_1 authentication mechanism requires libmongoc built with ENABLE_SSL
+	# mongodb deps
         libcurl4-openssl-dev \
         libssl-dev \
+	libsasl2-dev \
         ; \
     docker-php-ext-configure bcmath; \
     docker-php-ext-configure gd \
@@ -46,18 +46,47 @@ RUN set -ex; \
         mysqli \
         opcache \
         ; \
-    pecl channel-update pecl.php.net; \
-    pecl install xdebug-2.6.1; \
-    docker-php-ext-enable xdebug; \
-    pecl install mongodb; \
-    docker-php-ext-enable mongodb; \
-    pecl install redis; \
-    docker-php-ext-enable redis; \
-    pecl install memcached; \
-    docker-php-ext-enable memcached; \
+    # install php extensions from source
+    docker-php-source extract; \
+    # install php-redis
+    curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/4.2.0.tar.gz; \
+    tar xf /tmp/redis.tar.gz; \
+    mv phpredis-4.2.0 /usr/src/php/ext/redis; \
+    rm /tmp/redis.tar.gz; \
+    docker-php-ext-install -j $(nproc) redis; \
+    # install php-xdebug
+    curl -L -o /tmp/xdebug.tar.gz https://github.com/xdebug/xdebug/archive/2.6.1.tar.gz; \
+    tar xf /tmp/xdebug.tar.gz; \
+    mv xdebug-2.6.1 /usr/src/php/ext/xdebug; \
+    rm /tmp/xdebug.tar.gz; \
+    docker-php-ext-install -j $(nproc) xdebug; \
+    # install php-mongodb
+    OLD_PWD=$(pwd); \
+    curl -L -o /tmp/mongo-c-driver.tar.gz https://github.com/mongodb/mongo-c-driver/archive/1.13.0.tar.gz; \
+    cd /tmp; \
+    tar xf mongo-c-driver.tar.gz; \
+    cd mongo-c-driver-1.13.0; \
+    mkdir cmake-build; \
+    cd cmake-build; \
+    cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=off -DCMAKE_BUILD_TYPE=Release ..; \
+    make -j $(nproc); \
+    make install; \
+    cd $OLD_PWD; \
+    rm -rf /tmp/mongo-c-driver.tar.gz; \
+    rm -rf /tmp/mongo-c-driver-1.13.0; \
+    curl -L -o /tmp/mongo-php-driver.tar.gz https://github.com/mongodb/mongo-php-driver/archive/1.5.0.tar.gz; \
+    tar xf /tmp/mongo-php-driver.tar.gz; \
+    mv mongo-php-driver* /usr/src/php/ext/mongodb; \
+    rm /tmp/mongo-php-driver.tar.gz; \
+    docker-php-ext-configure mongodb --with-libbson=yes --with-libmongoc=yes; \
+    docker-php-ext-install -j $(nproc) mongodb; \
+    docker-php-source delete; \
     chown -Rc www-data:www-data /var/www; \
+    chmod 664 -Rc /var/www; \
     echo 'build OK!'
 
 WORKDIR /app
+
+USER www-data
 
 CMD ["php-fpm"]
