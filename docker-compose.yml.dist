@@ -1,0 +1,48 @@
+version: "3.2"
+
+services:
+  nginx:
+    image: nginx:1.15
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ${APP_ROOT}:/app
+      - ./docker/nginx/etc/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/etc/sites-enabled/:/etc/nginx/sites-enabled/
+      - ./docker/nginx/etc/conf.d/upstream.conf:/etc/nginx/conf.d/upstream.conf
+  php:
+    build: ./docker/php
+    restart: always
+    volumes:
+      - ./bin/composer:/usr/local/bin/composer
+      - ${APP_ROOT}:/app
+  mysql:
+    image: mysql:5.7
+    restart: always
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fecshop
+  mongodb:
+    image: mongo:3.6
+    restart: always
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_logs:/data/logs
+    environment:
+      MONGO_INITDB_DATABASE: fecshop
+  redis:
+    image: redis:4.0-stretch
+    restart: always
+    volumes:
+      - redis:/data
+  xunsearch:
+    image: hightman/xunsearch:latest
+
+volumes:
+  mysql:
+  mongodb_data:
+  mongodb_logs:
+  redis:
