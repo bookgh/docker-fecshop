@@ -15,17 +15,17 @@ RUN set -ex; \
     apt-get install -y \
         # dev tools
         git \
-	cmake \
+        cmake \
         # php gd deps
         libfreetype6-dev \
         libpng-dev \
         libjpeg-dev \
         # php zip deps
         libzip-dev \
-	# mongodb deps
+        # mongodb deps
         libcurl4-openssl-dev \
         libssl-dev \
-	libsasl2-dev \
+        libsasl2-dev \
         ; \
     docker-php-ext-configure bcmath; \
     docker-php-ext-configure gd \
